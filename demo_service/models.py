@@ -92,9 +92,9 @@ user_role_association = Table(
 class User(PkModel):
     __tablename__ = "user"
 
+    external_id: Mapped[str] = mapped_column(index=True, unique=True)
     display_name: Mapped[Optional[str]]
     email: Mapped[Optional[str]]
-    totp_secret: Mapped[Optional[str]]
 
     sessions: Mapped[list["Session"]] = relationship(back_populates="user")
 
@@ -107,7 +107,5 @@ class Session(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     created: Mapped[datetime] = mapped_column(UTCDateTime())
     last_active: Mapped[datetime] = mapped_column(UTCDateTime())
-    auth_time: Mapped[Optional[datetime]] = mapped_column(UTCDateTime())
-    acr: Mapped[Optional[str]]
 
     user: Mapped[User] = relationship(back_populates="sessions")

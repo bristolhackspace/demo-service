@@ -1,0 +1,78 @@
+.form-2col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 var(--col-gap); /* No row gap as contained elements will have margin */
+    max-width: 50rem;
+    margin: var(--row-gap) auto;
+}
+
+.form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 var(--col-gap); /* No row gap as contained elements will have margin */
+    max-width: 40rem;
+    margin: var(--row-gap) auto;
+}
+
+.fieldset {
+    border: var(--border-width) var(--border-color) solid;
+    border-radius: var(--border-radius);
+    padding: var(--box-padding);
+}
+
+@media screen and (min-width: 40rem){
+    .form-2col {
+        grid-template-columns: repeat(2, minmax(0, 1fr));;
+    }
+
+    .form-field-2col {
+        grid-column: span 2;
+    }
+}
+
+input, textarea, select {
+    display: block;
+    font: inherit;
+    background-color: var(--bg-color);
+    border: var(--border-width) var(--border-color) solid;
+    border-radius: var(--border-radius);
+    padding: var(--box-padding);
+    width: 100%;
+    margin: var(--row-gap) 0;
+}
+
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+    border-color: var(--border-color-active);
+    box-shadow: none;
+    outline: var(--border-color-active) solid 0.1rem;
+}
+
+button, .button, input[type=submit] {
+    display: inline-block;
+    font: inherit;
+    color: var(--font-color);
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    padding: var(--button-padding);
+    border: none;
+}
+
+button, .button {
+    background-color: var(--button-color);
+}
+
+input[type=submit], .button-primary {
+    background-color: var(--button-primary-color);
+}
+
+button:hover, .button:hover {
+    background-color: var(--button-hover-color);
+}
+
+input[type=submit]:hover {
+    background-color: var(--button-primary-hover-color);
+}
+
+label, legend {
+    margin: var(--row-gap) 0;
+}

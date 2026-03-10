@@ -4,6 +4,7 @@ import sys
 import tomllib
 
 from flask import Flask
+from flask_assets import Environment
 
 
 def create_app(test_config=None):
@@ -44,6 +45,9 @@ def create_app(test_config=None):
 
     from . import demo_data
     app.register_blueprint(demo_data.bp)
+
+    assets = Environment()
+    assets.init_app(app)
 
 
     return app
