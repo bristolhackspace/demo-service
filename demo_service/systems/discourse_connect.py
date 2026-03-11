@@ -93,13 +93,13 @@ class DiscourseConnect(SystemBase):
     def _find_or_create_user(self, external_id: str, email: str, name: str) -> User:
         stmt = insert(User).values(
             external_id=external_id,
-            display_name=name,
+            name=name,
             email=email
         )
 
         stmt = stmt.on_conflict_do_update(
             index_elements=[User.external_id],
-            set_=dict(display_name=name, email=email)
+            set_=dict(name=name, email=email)
         ).returning(User)
 
         orm_stmt = sa.select(User).from_statement(stmt).execution_options(populate_existing=True)

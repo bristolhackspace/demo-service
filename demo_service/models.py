@@ -86,7 +86,7 @@ class User(PkModel):
     __tablename__ = "user"
 
     external_id: Mapped[str] = mapped_column(index=True, unique=True)
-    display_name: Mapped[Optional[str]]
+    name: Mapped[Optional[str]]
     email: Mapped[str]
 
     sessions: Mapped[list["Session"]] = relationship(back_populates="user")
