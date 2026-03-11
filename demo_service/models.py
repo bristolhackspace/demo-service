@@ -82,19 +82,12 @@ class PkModel(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, sort_order=-1)
 
-user_role_association = Table(
-    "user_role",
-    Base.metadata,
-    Column("user_id", ForeignKey("user.id"), primary_key=True),
-    Column("role_id", ForeignKey("role.id"), primary_key=True),
-)
-
 class User(PkModel):
     __tablename__ = "user"
 
     external_id: Mapped[str] = mapped_column(index=True, unique=True)
     display_name: Mapped[Optional[str]]
-    email: Mapped[Optional[str]]
+    email: Mapped[str]
 
     sessions: Mapped[list["Session"]] = relationship(back_populates="user")
 

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime, timedelta, timezone
 import functools
 from flask import Flask, Response, current_app, g, request, after_this_request

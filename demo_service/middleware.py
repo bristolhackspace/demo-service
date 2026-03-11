@@ -1,6 +1,7 @@
 
 from flask import Flask, redirect, request
 from werkzeug import Response
+from werkzeug.exceptions import BadRequest
 
 from demo_service.extensions import hs
 
@@ -14,4 +15,6 @@ def require_login() -> Response | None:
     session = hs.session.current_session
 
     if session is None:
+        if request.args.get("sso") or request.args.get("sig"):
+            raise BadRequest("Something went wrong when trying to log you in. Please contact the Hackspace committee if this persists")
         return redirect(hs.discourse.begin_login(request.url))

@@ -13,7 +13,7 @@
         <!-- <meta property="og:image" content="images/logo300x300.png"> -->
 
         <!-- Custom styles for this template -->
-        {% assets filters='cssmin', output="gen/all.css",
+        {% assets filters='cssmin', output="all.css",
             "css/base.css", "css/header.css", "css/component.css", "css/form.css" %}
         <link href="{{ ASSET_URL }}" rel="stylesheet">
         {% endassets %}

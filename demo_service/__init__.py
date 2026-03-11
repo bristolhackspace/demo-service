@@ -13,7 +13,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SITE_NAME="Portal",
         SECRET_KEY="dev",
-        SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres:postgres@localhost:5432/portal",
+        SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres:postgres@localhost:5432/demo_service",
         SENDER_EMAIL="example@example.com"
     )
 

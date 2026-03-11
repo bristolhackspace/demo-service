@@ -1,0 +1,7 @@
+{% extends "base.html.j2" %}
+
+{% block title %}Oops, something went wrong!{% endblock %}
+
+{% block contents %}
+{{ exception.description }}
+{% endblock %}
