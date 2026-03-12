@@ -42,35 +42,27 @@ input, textarea, select {
 }
 
 input:focus-visible, textarea:focus-visible, select:focus-visible {
-    border-color: var(--border-color-active);
+    border-color: black;
     box-shadow: none;
-    outline: var(--border-color-active) solid 0.1rem;
+    outline: black solid 0.1rem;
 }
 
 button, .button, input[type=submit] {
     display: inline-block;
     font: inherit;
-    color: var(--font-color);
+    color: var(--button-font-color);
     text-decoration: none;
-    border-radius: var(--border-radius);
     padding: var(--button-padding);
-    border: none;
-}
-
-button, .button {
+    border-radius: 0;
+    border-width: 0 0 2px 0;
+    border-style: solid;
+    border-color: black;
     background-color: var(--button-color);
+    width: auto;
 }
 
-input[type=submit], .button-primary {
-    background-color: var(--button-primary-color);
-}
-
-button:hover, .button:hover {
+button:hover, .button:hover, input[type=submit]:hover {
     background-color: var(--button-hover-color);
-}
-
-input[type=submit]:hover {
-    background-color: var(--button-primary-hover-color);
 }
 
 label, legend {

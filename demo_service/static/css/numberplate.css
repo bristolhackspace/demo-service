@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'vrm-bold';
+    src: url('CharlesWright-Bold.otf') format('opentype');
+    font-display: auto;
+}
+
+.numberplate-input {
+    background-color: #ffd307;
+    font: 2.0rem "vrm-bold",Verdana,sans-serif;
+    width: 15rem;
+    text-align: center;
+    margin: var(--row-gap) auto;
+    padding: 0.5rem;
+}
+
+.numberplate-input:focus-visible {
+    border-color: black;
+    box-shadow: none;
+    outline: black solid 0.1rem;
+}
