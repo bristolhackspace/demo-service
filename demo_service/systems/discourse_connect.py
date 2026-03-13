@@ -8,6 +8,7 @@ from flask import Flask, Request, session
 import hashlib
 import hmac
 from secrets import token_urlsafe
+from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert
 from urllib.parse import urlencode, parse_qs
@@ -18,7 +19,7 @@ from demo_service.systems.base import SystemBase
 from demo_service.helpers import as_timedelta
 
 if TYPE_CHECKING:
-    from demo_service.systems import HackspaceSystems
+    from demo_service.systems.session_manager import SessionManager
 
 
 class DiscourseConnectError(Exception):
@@ -26,8 +27,10 @@ class DiscourseConnectError(Exception):
 
 
 class DiscourseConnect(SystemBase):
-    def __init__(self, hs: HackspaceSystems, app: Flask):
-        super().__init__(hs)
+    def __init__(self, db: SQLAlchemy, session: SessionManager, app: Flask):
+        self.db = db
+        self.session = session
+        
         self.sso_url: str = app.config["SSO_URL"]
         self.sso_secret = app.config["SSO_SECRET"].encode("utf-8")
         self.sso_expiry = as_timedelta(app.config.get("SSO_EXPIRY", timedelta(minutes=15)))
@@ -86,7 +89,7 @@ class DiscourseConnect(SystemBase):
 
         user = self._find_or_create_user(external_id, email, name)
 
-        self.hs.session.authenticate(user)
+        self.session.authenticate(user)
 
         return True
 
@@ -104,4 +107,4 @@ class DiscourseConnect(SystemBase):
 
         orm_stmt = sa.select(User).from_statement(stmt).execution_options(populate_existing=True)
         # Typecast as first() can return Null but we know the statement will always return something
-        return cast(User, self.hs.db.session.scalars(orm_stmt).first())
+        return cast(User, self.db.session.scalars(orm_stmt).first())

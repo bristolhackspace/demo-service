@@ -1,13 +1,9 @@
 from datetime import datetime, timezone
 import functools
-from typing import Optional
-from zoneinfo import ZoneInfo
 from flask import current_app
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.sql import func, expression
-from sqlalchemy import JSON, Column, ForeignKey, Table, types
-from uuid import UUID
+from zoneinfo import ZoneInfo
+from sqlalchemy import types
+from sqlalchemy.orm import Mapped, declarative_base, mapped_column
 
 
 Base = declarative_base()
@@ -81,24 +77,3 @@ class PkModel(Base):
     __abstract__ = True
 
     id: Mapped[int] = mapped_column(primary_key=True, sort_order=-1)
-
-class User(PkModel):
-    __tablename__ = "user"
-
-    external_id: Mapped[str] = mapped_column(index=True, unique=True)
-    name: Mapped[Optional[str]]
-    email: Mapped[str]
-
-    sessions: Mapped[list["Session"]] = relationship(back_populates="user")
-
-
-class Session(Base):
-    __tablename__ = "session"
-
-    id: Mapped[UUID] = mapped_column(primary_key=True)
-    secret_hash: Mapped[str]
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    created: Mapped[datetime] = mapped_column(UTCDateTime())
-    last_active: Mapped[datetime] = mapped_column(UTCDateTime())
-
-    user: Mapped[User] = relationship(back_populates="sessions")

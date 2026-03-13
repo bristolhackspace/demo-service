@@ -11,15 +11,11 @@ import uuid
 
 from demo_service.helpers import as_timedelta
 from demo_service.models import Session, User
-from demo_service.systems.base import SystemBase
-
-if TYPE_CHECKING:
-    from demo_service.systems import HackspaceSystems
 
 
-class SessionManager(SystemBase):
-    def __init__(self, hs: HackspaceSystems, app: Flask):
-        super().__init__(hs)
+class SessionManager():
+    def __init__(self, db: SQLAlchemy, app: Flask):
+        self.db = db
 
         self.cookie_name: str = app.config.get("HS_SESSION_NAME", "id")
         self.cookie_max_age = as_timedelta(
@@ -40,7 +36,7 @@ class SessionManager(SystemBase):
             return
         id_, secret = parts
 
-        session = self.hs.db.session.get(Session, uuid.UUID(hex=id_))
+        session = self.db.session.get(Session, uuid.UUID(hex=id_))
 
         if session is None:
             return
@@ -54,28 +50,28 @@ class SessionManager(SystemBase):
             session.last_active = now
             after_this_request(functools.partial(self.update_cookie, session, secret))
         else:
-            self.hs.db.session.delete(session)
-        self.hs.db.session.commit()
+            self.db.session.delete(session)
+        self.db.session.commit()
 
     def authenticate(self, user: User):
         now = datetime.now(timezone.utc)
         session = self.current_session
 
         if session and session.user != user:
-            self.hs.db.session.delete(session)
-            self.hs.db.session.commit()
+            self.db.session.delete(session)
+            self.db.session.commit()
             session = None
 
         if session is None:
             session = Session(id=uuid.uuid4(), created=now, user=user, last_active=now)
-            self.hs.db.session.add(session)
+            self.db.session.add(session)
             g.hs_session = session
 
         # Rotate secret
         secret = secrets.token_urlsafe()
         session.secret_hash = self.hash_secret(secret)
 
-        self.hs.db.session.commit()
+        self.db.session.commit()
 
         after_this_request(functools.partial(self.update_cookie, session, secret))
 

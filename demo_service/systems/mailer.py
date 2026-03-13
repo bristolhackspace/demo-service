@@ -12,15 +12,13 @@ from flask import Flask, current_app, render_template
 from jinja2 import TemplateNotFound
 
 from demo_service.models import User
-from demo_service.systems.base import SystemBase
 
 if TYPE_CHECKING:
     from demo_service.systems import HackspaceSystems
 
 
-class BaseMailer(ABC, SystemBase):
-    def __init__(self, hs: HackspaceSystems, app: Flask):
-        super().__init__(hs)
+class BaseMailer(ABC):
+    def __init__(self, app: Flask):
         self.sender_email = app.config.get("SENDER_EMAIL", "example@example.com")
 
     def send_email(self, user: User, template: str, subject: str, **kwargs):
@@ -41,18 +39,18 @@ class BaseMailer(ABC, SystemBase):
     ): ...
 
     @staticmethod
-    def build(hs: HackspaceSystems, app: Flask) -> "BaseMailer":
+    def build(app: Flask) -> "BaseMailer":
         if app.config.get("SMTP_HOST"):
-            return SmtpMailer(hs, app)
+            return SmtpMailer(app)
         elif app.config.get("TEST_MAILER"):
-            return TestMailer(hs, app)
+            return TestMailer(app)
         else:
-            return LoggingMailer(hs, app)
+            return LoggingMailer(app)
 
 
 class SmtpMailer(BaseMailer):
-    def __init__(self, hs: HackspaceSystems, app: Flask):
-        super().__init__(hs, app)
+    def __init__(self, app: Flask):
+        super().__init__(app)
         self.port = app.config.get("SMTP_PORT", 465)
         self.host = app.config["SMTP_HOST"]
         self.username = app.config["SMTP_USERNAME"]
@@ -94,8 +92,8 @@ class TestMailer(BaseMailer):
         subject: str
         kwargs: dict[str, Any]
 
-    def __init__(self, hs: HackspaceSystems, app: Flask):
-        super().__init__(hs, app)
+    def __init__(self, app: Flask):
+        super().__init__(app)
         self.captured_emails: list[TestMailer.EmailCapture] = []
 
     def send_email(self, user: User, template: str, subject: str, **kwargs):
@@ -112,8 +110,8 @@ class TestMailer(BaseMailer):
 
 
 class LoggingMailer(BaseMailer):
-    def __init__(self, hs: HackspaceSystems, app: Flask):
-        super().__init__(hs, app)
+    def __init__(self, app: Flask):
+        super().__init__(app)
 
     def raw_send_email(
         self, sender: str, receiver: str, text: str, html: str | None, subject: str
