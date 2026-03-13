@@ -22,10 +22,9 @@
     --border-color-active: var(--color-primary);
     --border-radius: 6px;
     --button-padding: 0.25rem 0.5rem;
-    --button-color: #ddd8d5;
-    --button-hover-color: #c5c2ba;
-    --button-primary-color: #ffe1c0;
-    --button-primary-hover-color: #fdbb75;
+    --button-color: #007032;
+    --button-hover-color: #024303;
+    --button-font-color: #efefef;
     --box-padding: 0 0.5rem;
 }
 
