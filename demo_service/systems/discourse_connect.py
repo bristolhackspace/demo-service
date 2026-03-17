@@ -15,7 +15,6 @@ from urllib.parse import urlencode, parse_qs
 from yarl import URL
 
 from demo_service.models import User
-from demo_service.systems.base import SystemBase
 from demo_service.helpers import as_timedelta
 
 if TYPE_CHECKING:
@@ -26,7 +25,7 @@ class DiscourseConnectError(Exception):
     pass
 
 
-class DiscourseConnect(SystemBase):
+class DiscourseConnect():
     def __init__(self, db: SQLAlchemy, session: SessionManager, app: Flask):
         self.db = db
         self.session = session
