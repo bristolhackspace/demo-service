@@ -1,0 +1,12 @@
+body {
+    counter-reset: section;
+}
+
+h2::before {
+    counter-increment: section;
+    content: counter(section) ". ";
+}
+
+.rule-list > li::marker {
+    content: counter(section, numeric) "." counter(list-item) ". ";
+}

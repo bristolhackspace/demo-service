@@ -11,6 +11,8 @@ class Onboarding(Base):
 
     id: Mapped[UUID] = mapped_column(primary_key=True)
     start_time: Mapped[datetime] = mapped_column(LocalDateTime())
+    current_page: Mapped[str]
+
     terms_agreed: Mapped[Optional[datetime]] = mapped_column(LocalDateTime())
 
     # Legal stuff (Based on GoCardless fields)
