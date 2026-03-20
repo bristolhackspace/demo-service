@@ -14,6 +14,8 @@ class Member(Base):
     name: Mapped[Optional[str]]
     email: Mapped[str]
 
+    email_consent: Mapped[bool] = mapped_column(default=True)
+
     sessions: Mapped[list["Session"]] = relationship(back_populates="member")
 
 
