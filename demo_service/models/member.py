@@ -7,14 +7,14 @@ from demo_service.models.base import Base, PkModel, UTCDateTime
 from sqlalchemy import ForeignKey
 
 
-class User(PkModel):
-    __tablename__ = "user"
+class Member(Base):
+    __tablename__ = "member"
 
-    external_id: Mapped[str] = mapped_column(index=True, unique=True)
+    ext_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=False)
     name: Mapped[Optional[str]]
     email: Mapped[str]
 
-    sessions: Mapped[list["Session"]] = relationship(back_populates="user")
+    sessions: Mapped[list["Session"]] = relationship(back_populates="member")
 
 
 class Session(Base):
@@ -22,8 +22,8 @@ class Session(Base):
 
     id: Mapped[UUID] = mapped_column(primary_key=True)
     secret_hash: Mapped[str]
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    member_id: Mapped[int] = mapped_column(ForeignKey("member.ext_id"))
     created: Mapped[datetime] = mapped_column(UTCDateTime())
     last_active: Mapped[datetime] = mapped_column(UTCDateTime())
 
-    user: Mapped[User] = relationship(back_populates="sessions")
+    member: Mapped[Member] = relationship(back_populates="sessions")

@@ -1,8 +1,8 @@
 from .base import Base
-from .user import Session, User
+from .member import Session, Member
 
 __all__ = [
     "Base",
     "Session",
-    "User"
+    "Member"
 ]

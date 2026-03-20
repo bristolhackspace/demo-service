@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Any
 from flask import Flask, current_app, render_template
 from jinja2 import TemplateNotFound
 
-from demo_service.models import User
+from demo_service.models import Member
 
 if TYPE_CHECKING:
     from demo_service.systems import HackspaceSystems
@@ -21,7 +21,7 @@ class BaseMailer(ABC):
     def __init__(self, app: Flask):
         self.sender_email = app.config.get("SENDER_EMAIL", "example@example.com")
 
-    def send_email(self, user: User, template: str, subject: str, **kwargs):
+    def send_email(self, user: Member, template: str, subject: str, **kwargs):
         plain_content = render_template(f"{template}.txt.j2", user=user, **kwargs)
         try:
             html_content = render_template(f"{template}.html.j2", user=user, **kwargs)
@@ -87,7 +87,7 @@ class SmtpMailer(BaseMailer):
 class TestMailer(BaseMailer):
     @dataclass
     class EmailCapture:
-        user: User
+        user: Member
         template: str
         subject: str
         kwargs: dict[str, Any]
@@ -96,7 +96,7 @@ class TestMailer(BaseMailer):
         super().__init__(app)
         self.captured_emails: list[TestMailer.EmailCapture] = []
 
-    def send_email(self, user: User, template: str, subject: str, **kwargs):
+    def send_email(self, user: Member, template: str, subject: str, **kwargs):
         self.captured_emails.append(
             self.EmailCapture(
                 user=user, template=template, subject=subject, kwargs=kwargs

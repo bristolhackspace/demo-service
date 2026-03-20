@@ -10,7 +10,7 @@ import secrets
 import uuid
 
 from demo_service.helpers import as_timedelta
-from demo_service.models import Session, User
+from demo_service.models import Session, Member
 
 
 class SessionManager():
@@ -53,11 +53,11 @@ class SessionManager():
             self.db.session.delete(session)
         self.db.session.commit()
 
-    def authenticate(self, user: User):
+    def authenticate(self, user: Member):
         now = datetime.now(timezone.utc)
         session = self.current_session
 
-        if session and session.user != user:
+        if session and session.member != user:
             self.db.session.delete(session)
             self.db.session.commit()
             session = None
