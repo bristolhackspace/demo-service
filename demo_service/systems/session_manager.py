@@ -28,7 +28,7 @@ class SessionManager():
         )
 
         app.before_request(self._load_session)
-    
+
 
     def _load_session(self):
         parts = request.cookies.get(self.cookie_name, "").split(":")
@@ -43,7 +43,7 @@ class SessionManager():
 
         if not secrets.compare_digest(session.secret_hash, self.hash_secret(secret)):
             return
-        
+
         now = datetime.now(timezone.utc)
 
         if session.last_active > (now - self.cookie_max_age):
@@ -53,17 +53,17 @@ class SessionManager():
             self.db.session.delete(session)
         self.db.session.commit()
 
-    def authenticate(self, user: Member):
+    def authenticate(self, member: Member):
         now = datetime.now(timezone.utc)
         session = self.current_session
 
-        if session and session.member != user:
+        if session and session.member != member:
             self.db.session.delete(session)
             self.db.session.commit()
             session = None
 
         if session is None:
-            session = Session(id=uuid.uuid4(), created=now, user=user, last_active=now)
+            session = Session(id=uuid.uuid4(), created=now, member=member, last_active=now)
             self.db.session.add(session)
             g.hs_session = session
 

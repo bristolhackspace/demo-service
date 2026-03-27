@@ -29,7 +29,7 @@ class DiscourseConnect():
     def __init__(self, db: SQLAlchemy, session: SessionManager, app: Flask):
         self.db = db
         self.session = session
-        
+
         self.sso_url: str = app.config["SSO_URL"]
         self.sso_secret = app.config["SSO_SECRET"].encode("utf-8")
         self.sso_expiry = as_timedelta(app.config.get("SSO_EXPIRY", timedelta(minutes=15)))
@@ -86,15 +86,15 @@ class DiscourseConnect():
         email = args["email"][0]
         name = args["name"][0]
 
-        user = self._find_or_create_user(ext_id, email, name)
+        member = self._find_or_create_member(ext_id, email, name)
 
-        self.session.authenticate(user)
+        self.session.authenticate(member)
 
         return True
 
-    def _find_or_create_user(self, ext_id: int, email: str, name: str) -> Member:
+    def _find_or_create_member(self, ext_id: int, email: str, name: str) -> Member:
         stmt = insert(Member).values(
-            id=ext_id,
+            ext_id=ext_id,
             name=name,
             email=email
         )
